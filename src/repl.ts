@@ -1,5 +1,5 @@
 import { createInterface } from 'node:readline';
-import { getCommands } from './command.js';
+import { getCommands } from './commands.js';
 
 export function startREPL(): void {
     const rl = createInterface({
@@ -7,20 +7,34 @@ export function startREPL(): void {
         output: process.stdout,
         prompt: "Pokedex > "
     });
+
     rl.prompt();
-    rl.on("line", async (line) => {
-        const userInput = cleanInput(line);
-        if (userInput.length === 0) {
-            rl.prompt();
-            return;
+
+    rl.on("line", async (input) => {
+        const words = cleanInput(input);
+        if (words.length === 0) {
+          rl.prompt();
+          return;
         }
-        const command: string = userInput[0];
-        const all_commands = getCommands();
-        if (command in all_commands) {
-            all_commands[command].callback(all_commands);
-        } else {
-            console.log("Unknown command");
+    
+        const commandName = words[0];
+    
+        const commands = getCommands();
+        const cmd = commands[commandName];
+        if (!cmd) {
+          console.log(
+            `Unknown command: "${commandName}". Type "help" for a list of commands.`,
+          );
+          rl.prompt();
+          return;
         }
+    
+        try {
+          cmd.callback(commands);
+        } catch (e) {
+          console.log(e);
+        }
+    
         rl.prompt();
     });
 }
