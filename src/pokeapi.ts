@@ -4,7 +4,21 @@ export class PokeAPI {
     constructor() {}
   
     async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
-      // implement this
+      if (pageURL === undefined) {
+        throw new Error('No URL provided.');
+      }
+
+      try {
+        const response = await fetch(pageURL);
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+    
+        const result = await response.json();
+        console.log(result);
+      } catch (error) {
+        console.error(error.message);
+      }
     }
   
     async fetchLocation(locationName: string): Promise<Location> {
