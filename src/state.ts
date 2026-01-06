@@ -9,28 +9,25 @@ export type CLICommand = {
 };
 
 export type State = {
-  readline: Interface,  
-  commands: Record<string, CLICommand>,
-  pokeAPI: PokeAPI,
-  nextLocationsURL: string,
-  prevLocationsURL: string, 
+  readline: Interface;
+  commands: Record<string, CLICommand>;
+  pokeAPI: PokeAPI;
+  nextLocationsURL: string;
+  prevLocationsURL: string;
 };
 
-export function initState(): State {
+export function initState() {
   const rl = createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: "pokedex > "
+    prompt: "Pokedex > ",
   });
 
-  const commands = getCommands();
-  
   return {
     readline: rl,
-    commands: commands,
-    pokeAPI: new PokeAPI,
+    commands: getCommands(),
+    pokeAPI: new PokeAPI(),
     nextLocationsURL: "",
-    prevLocationsURL: "", 
-  }
-
-};
+    prevLocationsURL: "",
+  };
+}
