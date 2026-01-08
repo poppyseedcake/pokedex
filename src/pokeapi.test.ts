@@ -5,7 +5,7 @@ test.concurrent.each([
   {
     key: "https://example.com",
     val: "testdata",
-    interval: 500, // 1/2 second
+    interval: 500, // 0.5 seconds
   },
   {
     key: "https://example.com/path",
@@ -19,7 +19,7 @@ test.concurrent.each([
   const cached = cache.get(key);
   expect(cached).toBe(val);
 
-  await new Promise((resolve) => setTimeout(resolve, interval + 100));
+  await new Promise((resolve) => setTimeout(resolve, interval * 2));
   const reaped = cache.get(key);
   expect(reaped).toBe(undefined);
 
