@@ -20,13 +20,22 @@ export class Cache {
         });
     }
 
-    get<T>(key: string) {
-        return this.#cache.get(key) as CacheEntry<T> | undefined;
+    get<T>(key: string): T | undefined {
+        const entry = this.#cache.get(key); 
+        if (!entry) {
+            return undefined
+        }
+        if (entry.createdAt < Date.now() - this.#interval ) {
+            this.#cache.delete(key);
+            return undefined;
+        }
+        return entry.val
+
     }
   
     #reap() {
         this.#cache.forEach((entry, key) => {
-            if (entry.createdAt + this.#interval < Date.now()) {
+            if (entry.createdAt < Date.now() - this.#interval) {
                 this.#cache.delete(key);
             }
         });
