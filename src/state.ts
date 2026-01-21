@@ -8,12 +8,18 @@ export type CLICommand = {
   callback: (state: State, ...arg: string[]) => Promise<void>;
 };
 
+export type Pokemon = {
+  name: string;
+  base_experience: number;
+}
+
 export type State = {
   readline: Interface;
   commands: Record<string, CLICommand>;
   pokeAPI: PokeAPI;
   nextLocationsURL: string;
   prevLocationsURL: string;
+  pokemon: Record<string, Pokemon>;
 };
 
 export function initState(cacheInterval: number) {
@@ -29,5 +35,6 @@ export function initState(cacheInterval: number) {
     pokeAPI: new PokeAPI(cacheInterval),
     nextLocationsURL: "",
     prevLocationsURL: "",
+    pokemon: {},
   };
 }

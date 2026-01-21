@@ -1,4 +1,5 @@
 import { Cache } from "./pokecache.js";
+import { Pokemon } from "./state.js";
 
 export class PokeAPI {
   private static readonly baseURL = "https://pokeapi.co/api/v2";
@@ -58,7 +59,32 @@ export class PokeAPI {
       );
     }
   }
+  
+  async fetchPokemon(pokemon_name: string): Promise<Pokemon> {
+    const url = `${PokeAPI.baseURL}/pokemon/${pokemon_name}`;
+
+    try {
+      const resp = await fetch(url);
+
+      if (!resp.ok) {
+        throw new Error(`${resp.status} ${resp.statusText}`);
+      }
+
+      const respJson = await resp.json();
+      const pokemon: Pokemon = {
+        name: respJson.name,
+        base_experience: respJson.base_experience,
+      }
+
+      return pokemon;
+    } catch (e) {
+      throw new Error(
+        `Error fetching pokemon '${pokemon_name}': ${(e as Error).message}`,
+      );
+    }
+  }
 }
+
 
 export type ShallowLocations = {
   count: number;
